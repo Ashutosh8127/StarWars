@@ -4,7 +4,8 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    Keyboard
+    Keyboard,
+    Platform
 } from 'react-native';
 import StarWarBackGround from '../Helper/StarWarBackGround';
 import Starwar from '../../images/orion-nebula-11107_640.jpg'
@@ -81,7 +82,7 @@ export default class LoginScreen extends Component {
   renderLoginScrennView() {
     return(
       <React.Fragment>
-      <MyStatusBar backgroundColor={'#3f0070'} />
+      {Platform.OS==='ios'? <MyStatusBar backgroundColor={'#3f0070'} /> : null}  
       <ToolBar backgroundColor={'#370061'} headingText={'Welcome To Star War'} isLogout={false}/>
       <View style={{flex:1, justifyContent: 'center', justifyContent: 'center'}}>
         <UserNameInput 

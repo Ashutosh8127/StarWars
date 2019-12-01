@@ -3,6 +3,7 @@ import { View, StatusBar, Platform } from 'react-native';
 import styled from 'styled-components';
 
 const MyStatusBar = (props) => {
+  const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 10 : 0;
   const Container = styled.View`
     height: ${STATUSBAR_HEIGHT};
     backgroundColor: ${props.backgroundColor}
@@ -14,7 +15,6 @@ const MyStatusBar = (props) => {
   )
 }
 
-const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 10 : StatusBar.currentHeight;
 
 MyStatusBar.defaultProps = {
   backgroundColor: "#d3d3d3",

@@ -5,7 +5,8 @@ import {
   TextInput,
   FlatList,
   TouchableOpacity,
-  StatusBar
+  StatusBar,
+  Platform
 } from 'react-native';
 import StarWarBackGround from '../Helper/StarWarBackGround';
 import OrionNebula from '../../images/orion-nebula-11001_640.jpg'
@@ -149,10 +150,11 @@ export default class SearchScreen extends Component {
   }
   renderSearchScreenView() {
     const isSearchBarEnabled = this.state.search.isSearchBarEnabled;
+    alert(Platform.OS)
     const myIcon = (<Ionicons style={{ padding: 10 }} name="ios-search" size={20} color="#000000"/>)
     return(
       <MainContainer>
-        <MyStatusBar backgroundColor={'#8d8d8d'} />
+        {Platform.OS==='ios'? <MyStatusBar backgroundColor={'#8d8d8d'} /> : null}   
         <ToolBar backgroundColor={'gray'} headingText={'Search'} isLogout={true} logoutUser={this.logoutUser.bind(this)}/>
         <SearchContainer>
           {myIcon}
