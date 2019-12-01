@@ -3,34 +3,123 @@ import {
     View,
     Text,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    Keyboard
 } from 'react-native';
 import StarWarBackGround from '../Helper/StarWarBackGround';
-import Starwar from '../../images/Star.jpg'
+import Starwar from '../../images/orion-nebula-11107_640.jpg'
 import Loader from '../Helper/Loader';
+import ToolBar from '../Helper/Toolbar';
+import Error from '../Helper/Error';
+import MyStatusBar from '../Helper/Toolbar';
 import styled from 'styled-components';
+import { api } from '../../Utils/api';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 export default class LoginScreen extends Component {
   static navigationOptions = {
     header: null
   }
+  constructor(props) {
+    super(props)
+    this.state = {
+      isLoading: false,
+      username: '',
+      password: '',
+      error: ''
+    }
+  }
+  storeData = async (heroname, isAuthenticated) => {
+    if(isAuthenticated) {
+      await AsyncStorage.setItem('isAuthenticated', isAuthenticated.toString());
+      await AsyncStorage.setItem('username', JSON.stringify(heroname));
+      this.props.navigation.navigate('App');
+      this.setState({
+        username: '',
+        password: '',
+        isLoading: false
+      });
+    } else {
+      this.setState({
+        username: '',
+        password: '',
+        isLoading: false,
+        error: 'Please enter your username & password'
+      });
+    }
+  }
   submitLogin = () => {
-    this.props.navigation.navigate('SearchScreen')
+    let { username, password } = this.state;
+    var isAuthenticated = false;
+    Keyboard.dismiss();
+    this.setState({
+      isLoading: true,
+      error: ''
+    });
+    if (username.trim() && password.trim()) {
+      api.authUser(username)
+      .then((authData) => {
+        let heroname = authData.results[0].name;
+        let bornYear = authData.results[0].birth_year;
+        isAuthenticated = username.toLowerCase() === heroname.toLowerCase() && password === bornYear;
+        this.storeData(heroname, isAuthenticated)
+      })
+      .catch((e) => {
+        this.setState({
+          isLoading: false,
+          error: e
+        });
+      });
+    } else {
+      this.setState({
+        isLoading: false,
+        error: 'Please enter your username & password'
+      });
+    }
   }
   renderLoginScrennView() {
     return(
+      <React.Fragment>
+      <MyStatusBar backgroundColor={'#3f0070'} />
+      <ToolBar backgroundColor={'#370061'} headingText={'Welcome To Star War'} isLogout={false}/>
       <View style={{flex:1, justifyContent: 'center', justifyContent: 'center'}}>
-        <UserNameInput placeholder="Enter Username"/>
+        <UserNameInput 
+        placeholder="Enter Username"
+        value={this.state.username}
+        placeholder='Username'
+        placeholderTextColor='gray'
+        onChangeText={(text) => this.setState({ username: text })}
+        autoCapitalize='none'
+        autoCorrect={false}
+        returnKeyType='next'
+        keyboardAppearance='light'
+        enablesReturnKeyAutomatically={true}
+        />
         <Seprator />
-        <UserNameInput placeholder="Enter password"/>
+        <UserNameInput 
+        value={this.state.password}
+        placeholder='Password'
+        placeholderTextColor='gray'
+        onChangeText={(text) => this.setState({ password: text })}
+        autoCapitalize='none'
+        autoCorrect={false}
+        secureTextEntry={true}
+        returnKeyType='go'
+        keyboardAppearance='light'
+        enablesReturnKeyAutomatically={true}
+        blurOnSubmit={true}
+        onSubmitEditing={this.handleSubmit}
+        />
         <LoginButton onPress={this.submitLogin}> 
           <LoginButtonView>
             <LoginText>Sign In</LoginText>
           </LoginButtonView>
         </LoginButton>
-        <Loader isLoading={true} color={'blue'}/>
+        <Loader isLoading={this.state.isLoading} color={'blue'}/>
+        {this.state.error ? <Error error={this.state.error} /> : null}
       </View>
+      </React.Fragment>
     )
   }
   render() {
@@ -40,7 +129,6 @@ export default class LoginScreen extends Component {
         imagename={Starwar}
         content={this.renderLoginScrennView()}
         >
-          
         </StarWarBackGround>
       </React.Fragment>
     )
@@ -69,6 +157,7 @@ export default class LoginScreen extends Component {
     margin-top: 15;
     height: 50;
     border-radius: 15;
+    background-color: #370061;
   `
 
   const LoginButtonView = styled.View`

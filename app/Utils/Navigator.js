@@ -7,13 +7,19 @@ import LoginScreen from '../Components/Screen/LoginScreen';
 import SearchScreen from '../Components/Screen/SearchScreen';
 
 const LoginStack = createStackNavigator({
-    LoginScreen: { screen : LoginScreen },
-    SearchScreen: { screen: SearchScreen }
+    LoginScreen: { screen : LoginScreen }
 })
 
+const SearchStack = createStackNavigator({
+    SearchScreen: { screen: SearchScreen }
+})
 export default createAppContainer(
     createSwitchNavigator({
         AuthLoading: Splash,
-        App: LoginStack,
+        Auth: LoginStack,
+        App: SearchStack,
+    },
+    {
+        initialRouteName: 'AuthLoading',
     })
 )

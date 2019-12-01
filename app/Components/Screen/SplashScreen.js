@@ -6,14 +6,19 @@ import {
 import StarWarBackGround from '../Helper/StarWarBackGround';
 import Starwar from '../../images/Star.jpg'
 import Loader from '../Helper/Loader';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class SplashScreen extends Component {
-  
   componentDidMount() {
-    setTimeout(() => {
-      this.props.navigation.navigate('App')
-    }, 2000);
+    this.check();
   }
+
+  check = async () => {
+    const isAuthenticated = await AsyncStorage.getItem('isAuthenticated');
+    setTimeout(() => {
+      this.props.navigation.navigate(isAuthenticated ? 'App' : 'Auth');
+    }, 2000)
+  };
   renderSplashScrennView() {
     return(
       <View style={{flex:1, justifyContent: 'center', justifyContent: 'center'}}>

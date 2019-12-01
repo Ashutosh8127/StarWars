@@ -8,9 +8,9 @@
 
 import React,{ Component } from 'react';
 import AppContainer from './app/Utils/Navigator';
-import { useScreens } from 'react-native-screens';
+import { enableScreens } from 'react-native-screens';
 
-useScreens()
+enableScreens()
 export default class App extends Component {
   render() {
     return(
