@@ -150,7 +150,7 @@ export default class SearchScreen extends Component {
   }
   renderSearchScreenView() {
     const isSearchBarEnabled = this.state.search.isSearchBarEnabled;
-    alert(Platform.OS)
+    // alert(Platform.OS)
     const myIcon = (<Ionicons style={{ padding: 10 }} name="ios-search" size={20} color="#000000"/>)
     return(
       <MainContainer>
